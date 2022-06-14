@@ -17,11 +17,11 @@ from funciones import *
 
 
 class Persona:
-    def __init__(self,cedula,nombre,genero,pais):
+    def __init__(self,cedula,nombre,genero,pais,pers):
         self.cedula=cedula
         self.nombre=nombre
         self.genero=genero
-        self.personalidad=()
+        self.personalidad=pers
         self.pais=pais
         self.estado=[True,"",""]
 
@@ -41,18 +41,12 @@ class Persona:
         return 
 
     def asignarPersonalidad(self,pers):
-        cont=0
-        for i in personalidades:
-            cont2=0
-            for tup in personalidades[i]:
-                if tup[0]==pers:
-                    self.personalidad=(cont,cont2)
-                cont2+=1
-            cont+=1
-        return 
+        self.personalidad=pers
+        return
+    
 
     def asignarPais(self,pais):
-        self.pais=random.choice(paises)
+        self.pais=pais
         return 
         
     def asignarEstado(self,estado):

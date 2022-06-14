@@ -41,10 +41,15 @@ def obtenerPersonalidad(pers):
     for i in personalidades:
         cont2=0
         for tup in personalidades[i]:
-            if tup[0]==pers:
-                return (cont,cont2)
+            if (tup[0])==str(pers):
+                return cont,cont2
             cont2+=1
         cont+=1
-    return 'Not found'
+    return 
     
-
+def validarCantidad(cantidad):
+    if type(cantidad)!=int:
+        return False
+    if int(cantidad)<25:
+        return False
+    return True
