@@ -1,7 +1,7 @@
 #################################
 #Elaborado por: Marbel Brenes y Samuel Garces
-#Fecha de creación: 5/6/2022 15:35 p.m
-#Última Modificación: 
+#Fecha de creación: 05/06/2022 15:35 p.m
+#Última Modificación: 17/06/22 11:00 p.m
 #Versión: 3.10.4
 ########################
 #Importación de Librerías
