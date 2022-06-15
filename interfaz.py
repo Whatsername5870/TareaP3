@@ -20,6 +20,7 @@ baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
 retirados=[]
+cedulas=[]
 
 #Ventana Principal
 ventana = Tk()
@@ -253,6 +254,23 @@ def anhadirNPersonas():
         return ventanaAnhadirNPersonas()
 
 #Eliminar los datos de una persona
+def ventanaModificarAux():
+    """
+    Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
+    Entrada: N/D
+    Salida: Ventanta para escribir motivo
+    """
+    if validarCedula(cedula.get()):
+        if not validarEnCedulas(cedula.get()):
+            ventana.geometry("600x420")
+            print('a')
+        else:
+            mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
+            return ventanaModificarAux()
+    else:
+        mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
+        return ventanaModificarAux()
+        
 def eliminarPersona():
     """
     Funcionamiento: Elimina una persona de la BD
@@ -266,13 +284,14 @@ def confirmarEliminar():
     Entrada: N/D
     Salida: 
     """
-    cedulaA = cedula.get()
-    if validarCedula(cedulaA)==False:
-        mb.showinfo("Formato de Cédula Incorrecto", "El formato debe de ser de la forma: #-####-####")
-        ventanaEliminarPersona()
+    'cedulaA = cedula.get()'
+    ventanaModificarAux()
+    
+
     ventana.geometry("400x320")
     confirmarBoton.config(width=12, height=2)
     confirmarBoton.grid(row=6, column=0, sticky=E, pady=15)
+    solititarJustificacion.grid(row=4, column=0, sticky=W)
 
    #Ocultar botones de Eliminar Persona
     solititarCedula.grid_remove()
