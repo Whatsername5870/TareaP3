@@ -19,6 +19,7 @@ from Clase import *
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
+retirados=[]
 
 #Ventana Principal
 ventana = Tk()
@@ -140,6 +141,13 @@ def ventanaPrincipal():
     insertarBotonN.grid_remove()
     limpiarBotonN.grid_remove()
     
+    #Ocultar Botones de Eliminar Personas
+    tituloEliminar.grid_remove()
+    solititarCedula.grid_remove()
+    eliminarBoton.grid_remove()
+    confirmarBoton.grid_remove()
+    cedulaEntradaE.grid_remove()
+
 #Ventana Añadir Participantes
 def ventanaAnhadirPersona():
     ventana.geometry("500x450")
@@ -244,13 +252,68 @@ def anhadirNPersonas():
         mb.showerror('Caracter Incorrecto',"Ingrese únicamente valores numéricos mayores o iguales a 25.")
         return ventanaAnhadirNPersonas()
 
+#Eliminar los datos de una persona
+def eliminarPersona():
+    """
+    Funcionamiento: Elimina una persona de la BD
+    Entrada: N/D
+    Salida: 
+    """
+
+def confirmarEliminar():
+    """
+    Funcionamiento: Pide una confirmación antes de eliminar a una persona de la BD
+    Entrada: N/D
+    Salida: 
+    """
+    cedulaA = cedula.get()
+    if validarCedula(cedulaA)==False:
+        mb.showinfo("Formato de Cédula Incorrecto", "El formato debe de ser de la forma: #-####-####")
+        ventanaEliminarPersona()
+    ventana.geometry("400x320")
+    confirmarBoton.config(width=12, height=2)
+    confirmarBoton.grid(row=6, column=0, sticky=E, pady=15)
+
+   #Ocultar botones de Eliminar Persona
+    solititarCedula.grid_remove()
+    cedulaEntrada.grid_remove()
+    eliminarBoton.grid_remove()
+
+def ventanaEliminarPersona():
+    """
+    Funcionamiento: Crea la ventanta para eliminar una persona de la BD
+    Entrada: N/D
+    Salida: 
+    """
+    ventana.geometry("400x320")
+    tituloEliminar.grid(row=0, column=0, sticky=W, columnspan=2)
+    solititarCedula.grid(row=4, column=0, sticky=W)
+    cedulaEntrada.grid(row=4, column=1, sticky=W)
+    eliminarBoton.config(width=12, height=2)
+    eliminarBoton.grid(row=6, column=0, sticky=E, pady=15)
+    limpiarBotonN.config(width=12, height=2)
+    limpiarBotonN.grid(row=6, column=1, pady=15)
+    botonRegresarPequeño.grid(row=6, column=2, sticky=E, pady=15)
+
+    #Ocultar botones de ventana principal
+    titulo.grid_remove()
+    cargarBD.grid_remove()
+    insertarPart.grid_remove()
+    insertarNPart.grid_remove()
+    modificar.grid_remove()
+    eliminar.grid_remove()
+    xml.grid_remove()
+    reportes.grid_remove()
+    salir.grid_remove()
+    confirmarBoton.grid_remove()
+
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
 cargarBD=Button(ventana, text="Cargar Bases de Datos",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=lambda:[cargarBaseDatosPaises(), cargarBaseDatosPerso()])
 insertarPart = Button(ventana, text="Insertar un participante",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=ventanaAnhadirPersona,state=DISABLED)
 insertarNPart = Button(ventana, text="Insertar N participantes",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=ventanaAnhadirNPersonas,state=DISABLED)
 modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
-eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED)
+eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390', command=ventanaEliminarPersona,state=DISABLED)
 xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
 reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
 salir = Button(ventana, text="Salir",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861', command=ventana.quit)
@@ -292,10 +355,13 @@ cantidadEntrada = Entry(ventana, textvariable=cantidad)
 insertarBotonN = Button(ventana, text="Insertar", command=anhadirNPersonas)
 limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
 
-
-
-
-
+#Botones Eliminar Datos Persona
+tituloEliminar = Label(ventana, text="Eliminando Persona", font=("Times", 20))
+solititarCedula = Label(ventana, text="Digite una cédula: ")
+cedulaEntradaE = Entry(ventana, textvariable=cedula)
+eliminarBoton = Button(ventana, text="Eliminar", command=confirmarEliminar)
+solititarJustificacion = Label(ventana, text="Justifique: ")
+confirmarBoton = Button(ventana, text="Confirmar", command=eliminarPersona)
 
 
 
