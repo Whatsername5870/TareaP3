@@ -14,9 +14,7 @@ from funciones import*
 from validaciones import *
 from Clase import *
 #Bases de Datos
-baseDeDatos=[] #Será la base de datos principal, una lista de objetos
-paises=[] #Base de Datos de los paises
-personalidades={}
+
 #Ventana Principal
 ventana = Tk()
 ventana.resizable(0,0)
@@ -30,10 +28,7 @@ def clean():
     personalidadCaja.set('')
     estado.set('')
     cantidad.set('')
-
-
-
-
+    cedulaCod.set('')
 
 
 #Cargar Bases de Datos
@@ -136,12 +131,21 @@ def ventanaPrincipal():
     estadoEntrada.grid_remove()
     paisTitulo.grid_remove()
     paisEntrada.grid_remove()
+
     #Ocultar Botones de N Personas
     tituloAñadirN.grid_remove()
     cantidadLabel.grid_remove()
     cantidadEntrada.grid_remove()
     insertarBotonN.grid_remove()
     limpiarBotonN.grid_remove()
+
+    #Ocultar Botones Modificar
+    tituloModificar.grid_remove()
+    cedulaCodTitulo.grid_remove()
+    cedulaCodEntrada.grid_remove()
+    InsertarBoton.grid_remove()
+    limpiarBoton.grid_remove()
+    regresarBoton.grid_remove()
     
 #Ventana Añadir Participantes
 
@@ -189,26 +193,30 @@ def insertarParti():
     cedulaA = cedula.get()
     nombreA = nombre.get()
     generoA= genero.get()
-    paisA = pais.get()
-    persoA = personalidadCaja.get()
+    paisA = traducirPais(str(pais.get()))
+    persoA = obtenerPersonalidad(personalidadCaja.get())
     if validarCedula(cedulaA):
-        if validarNombre(nombreA):
-            persona=Persona(cedulaA,nombreA,generoA,paisA,persoA) #Hacer función alambrada con las personalidades
-            baseDeDatos.append(persona)
-            print(persona.getCedula())
-            print(persona.getNombre())
-            print(persona.getGenero())
-            print(persona.getPais())
-            print(persona.getPersonalidad())
-            print(persona.getEstado())
-            mb.showinfo("PPersona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
+        if validarEnCedulas(cedulaA):
+            cedulas.append(cedulaA)
+            if validarNombre(nombreA):#Hacer función alambrada con las personalidades
+                persona=Persona() 
+                persona.asignarCedula(cedulaA)
+                persona.asignarNombre(nombreA)
+                persona.asignarGenero(generoA)
+                persona.asignarPais(paisA)
+                persona.asignarPersonalidad(persoA)
+                print(persona.getAll())
+                baseDeDatos.append(persona)
+                mb.showinfo("Persona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
+            else:
+               mb.showinfo("Nombre Incorrecto", "El formato del nombre debe empezar con el nombre, un espacio, el primer apelido seguido del segundo con un guión\nEjemplo: Ana Li-Fuentes")    
         else:
-            mb.showinfo("Nombre Incorrecto", "El formato del nombre debe empezar con el nombre, un espacio, el primer apelido seguido del segundo con un guión\nEjemplo: Ana Li-Fuentes")    
+            mb.showinfo("Cédula ya registrada", "La cédula ya se encuentra registrada\nIngrese una nueva cédula.")
     else:
-        mb.showinfo("Formato de Cédula Incorrecto", "El formato debe de ser de la forma: #-####-####")
+        mb.showinfo("Formato de Cédula Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
     return ventanaPrincipal()
 
-#Insertar  N  Paersonas
+#Insertar  N  Personas
 def ventanaAnhadirNPersonas():
     """
     Funcionamiento: Crea la ventanta para añadir n participantes
@@ -237,7 +245,25 @@ def ventanaAnhadirNPersonas():
     salir.grid_remove()
 
 
-
+#N personas Función
+def anhadirNProceso(cant):
+    i=0
+    while i!=int(cant):
+        cedulaN=generarCedulasRandom()
+        nombreN=generarNombresRandom()
+        generoN=bool(random.getrandbits(1))
+        paisN=generarPaisRandom()
+        personalidadN=generarPersoRandom()
+        personaN=Persona()
+        personaN.asignarCedula(cedulaN)
+        personaN.asignarNombre(nombreN)
+        personaN.asignarGenero(generoN)
+        personaN.asignarPais(paisN)
+        personaN.asignarPersonalidad(personalidadN)
+        baseDeDatos.append(personaN)
+        print(personaN.getAll())
+        i+=1
+    return baseDeDatos
 
 def anhadirNPersonas():
     """
@@ -247,11 +273,60 @@ def anhadirNPersonas():
     """
     if validarCantidad(cantidad.get()):
         mb.showinfo("Personas Registradas", "Los participantes se crearon satisfactoriamente.")
-        return ventanaAnhadirNPersonas()
+        cantidadN=cantidad.get()
+        anhadirNProceso(cantidadN)
+        return ventanaPrincipal()
     else:
         clean()
         mb.showerror('Caracter Incorrecto',"Ingrese únicamente valores numéricos mayores o iguales a 25.")
         return ventanaAnhadirNPersonas()
+
+def ventanaModificarDatos():
+    """
+    Funcionamiento: Crea la ventanta para darse de baja
+    Entrada: N/D
+    Salida: Ventanta para darse de baja
+    """
+    ventana.geometry("500x420")
+    tituloModificar.grid(row=0, column=1, sticky=W, columnspan=2)
+    cedulaCodTitulo.grid(row=2, column=0)
+    cedulaCodEntrada.grid(row=2, column=1)
+    InsertarBoton.config(width=12, height=2)
+    InsertarBoton.grid(row=5, column=0, sticky=E, pady=15)
+    limpiarBoton.config(width=12, height=2)
+    limpiarBoton.grid(row=5, column=1, pady=15)
+    regresarBoton.grid(row=6, column=3 ,sticky=E, pady=15)
+
+    #Ocultar botones de ventana principal
+    titulo.grid_remove()
+    cargarBD.grid_remove()
+    insertarPart.grid_remove()
+    insertarNPart.grid_remove()
+    modificar.grid_remove()
+    eliminar.grid_remove()
+    xml.grid_remove()
+    reportes.grid_remove()
+    salir.grid_remove()
+    regresarBoton.grid_remove()
+    insertar.grid_remove()
+
+def ventanaModificarAux():
+    """
+    Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
+    Entrada: N/D
+    Salida: Ventanta para escribir motivo
+    """
+    if validarCedula(cedulaCod.get()):
+        if not validarEnCedulas(cedulaCod.get()):
+            ventana.geometry("600x420")
+            print('a')
+        else:
+            mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
+            return ventanaModificarAux()
+    else:
+        mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
+        return ventanaModificarAux()
+
 
 
 #Botones Ventana Principal
@@ -259,7 +334,7 @@ titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='
 cargarBD=Button(ventana, text="Cargar Bases de Datos",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=lambda:[cargarBaseDatosPaises(), cargarBaseDatosPerso()])
 insertarPart = Button(ventana, text="Insertar un participante",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=ventanaAnhadirPersona,state=DISABLED)
 insertarNPart = Button(ventana, text="Insertar N participantes",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=ventanaAnhadirNPersonas,state=DISABLED)
-modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
+modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',command=ventanaModificarDatos,state=DISABLED,)
 eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED)
 xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
 reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
@@ -305,15 +380,22 @@ insertarBotonN = Button(ventana, text="Insertar", command=anhadirNPersonas)
 limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
 
 
+#Botones para Modificar
+cedulaCod = StringVar()
+tituloModificar = Label(ventana, text="Modificar Datos", font=("Times", 20))
+cedulaCodTitulo = Label(ventana, text="Cédula de la Persona")
+cedulaCodEntrada = Entry(ventana, textvariable=cedulaCod)
+InsertarBoton = Button(ventana, text="Insertar",command=ventanaModificarAux)
+limpiarBoton = Button(ventana, text="Limpiar", command=clean)
+regresarBoton = Button(ventana, text='Regresar',command=ventanaPrincipal)
 
+#Botones para Modificar Aux
 
-
-
-
-
-
-
-
+AuxCedulaTitulo= StringVar()
+modificarTitulo =  Label(ventana, text="Motivo de darse de baja", font=("Times", 20))
+motivoLabel = Label(ventana, text="Motivo")
+motivoEntrada = Entry(ventana)
+motivoBoton = Button(ventana, text="Dar baja")
 
 
 

@@ -8,11 +8,13 @@
 import re
 from datetime import datetime
 import random
+import names
+from numpy import True_
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
-
+cedulas=[]
 #Funciones para Cargar Bases de Datos
 
 def fechaActual():
@@ -29,6 +31,34 @@ def generarPais(baseDatos):
     pais=random.choice(baseDatos)
     return pais
 
+def traducirPais(opcion):
+    pais=paises.index(opcion)
+    return pais
+    
+def traducirGenero(gen):
+    if gen==True:
+        return 'Masculino'
+    else:
+        return 'Femenino'
+
+def traducirPaisSTR(num):
+    f = open("paises.txt", "r")
+    base = f.read()
+    e = base.split("\n")
+    return e[num]
+
+
+def traducirPersonalidad(tupla):
+    tipos=list(personalidades.keys())
+    tipo=tipos[tupla[0]]
+    subtipos=personalidades[tipo]
+    subtipo=subtipos[tupla[1]][0]
+    return str(tipo)+'-'+str(subtipo)
+
+def traducirEstado(estado):
+    if estado[0]==True:
+        return 'Activo'
+    return 'Inactivo'
 def generarPerso(DictPerso):
     opciones=[]
     for i in list(DictPerso.values()):
@@ -48,8 +78,36 @@ def obtenerPersonalidad(pers):
     return 
     
 def validarCantidad(cantidad):
-    if type(cantidad)!=int:
+    try:
+        if int(cantidad)<25:
+            return False
+        return True
+    except ValueError:
         return False
-    if int(cantidad)<25:
-        return False
-    return True
+
+def generarCedulasRandom():
+    cedula=str(random.randint(1,9))+'-'+str(random.randint(1000,9999))+'-'+str(random.randint(1000,9999))
+    if cedula in cedulas:
+        return generarCedulasRandom()
+    cedulas.append(cedula)
+    return cedula
+
+def generarNombresRandom():
+    """
+    Funcionalidad: Genera nombres aleatorios en el formato establecido
+    Entrada: N/D
+    Salida: Tupla con el nombre
+    """
+    return names.get_full_name()+'-'+names.get_last_name()
+
+def generarPaisRandom():
+    pais=random.choice(paises)
+    paisInt=paises.index(pais)
+    return paisInt
+
+
+
+def generarPersoRandom():
+    tipo=random.randint(0,3)
+    subtipo=random.randint(0,3)
+    return tipo,subtipo
