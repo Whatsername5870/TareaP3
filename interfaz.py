@@ -4,6 +4,7 @@
 #Última Modificación: 17/06/22 11:00 p.m
 #Versión: 3.10.4
 ########################
+
 #Importación de Librerías
 from optparse import Values
 from tkinter import *
@@ -13,10 +14,12 @@ from tkinter import messagebox as mb
 from funciones import*
 from validaciones import *
 from Clase import *
+
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
+
 #Ventana Principal
 ventana = Tk()
 ventana.resizable(0,0)
@@ -31,13 +34,7 @@ def clean():
     estado.set('')
     cantidad.set('')
 
-
-
-
-
-
 #Cargar Bases de Datos
-
 def cargarBaseDatosPaises():
     """
     Funcionamiento: Carga la base de datos de un archivo de texto de paises
@@ -144,7 +141,6 @@ def ventanaPrincipal():
     limpiarBotonN.grid_remove()
     
 #Ventana Añadir Participantes
-
 def ventanaAnhadirPersona():
     ventana.geometry("500x450")
     tituloAñadir.grid(row=0, column=0, sticky=W, columnspan=2)
@@ -177,9 +173,7 @@ def ventanaAnhadirPersona():
     reportes.grid_remove()
     salir.grid_remove()
     
-
 #Insertar Participante - Función
-
 def insertarParti():
     """
     Funcionamiento: Inserta un participante
@@ -236,9 +230,6 @@ def ventanaAnhadirNPersonas():
     reportes.grid_remove()
     salir.grid_remove()
 
-
-
-
 def anhadirNPersonas():
     """
     Funcionamiento: Inserta N personas creadas
@@ -253,7 +244,6 @@ def anhadirNPersonas():
         mb.showerror('Caracter Incorrecto',"Ingrese únicamente valores numéricos mayores o iguales a 25.")
         return ventanaAnhadirNPersonas()
 
-
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
 cargarBD=Button(ventana, text="Cargar Bases de Datos",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=lambda:[cargarBaseDatosPaises(), cargarBaseDatosPerso()])
@@ -265,7 +255,6 @@ xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5,
 reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
 salir = Button(ventana, text="Salir",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861', command=ventana.quit)
 
-
 #Botones para insertar Participante
 cedula = StringVar()
 nombre = StringVar()
@@ -273,6 +262,7 @@ genero = BooleanVar()
 personalidadCaja=StringVar()  
 pais=StringVar()
 estado= StringVar()
+
 ####Botones Añadir Participante
 tituloAñadir = Label(ventana, text="Insertar una persona", font=("Times", 20),bg='#FCF8E8')
 cedulaTitulo = Label(ventana, text="Cédula")
@@ -294,9 +284,7 @@ estadoEntrada=Entry(ventana,state=DISABLED,textvariable=estado)
 insertar = Button(ventana, text="Insertar", command=insertarParti)
 botonRegresarPequeño = Button(ventana, text="Regresar", command=ventanaPrincipal, width=12, height=2)
 
-
 #Botones Añadir  N  Personas
-
 tituloAñadirN = Label(ventana, text="Insertar N Personas", font=("Times", 20))
 cantidadLabel = Label(ventana, text="Cantidad a generar")
 cantidad = StringVar()

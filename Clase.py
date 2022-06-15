@@ -5,17 +5,16 @@
 #Última Modificación: 
 #Versión: 3.10.4
 ########################
-#Importación de Librerías
 
+#Importación de Librerías
 import random
 from datetime import datetime
 from validaciones import *
 from funciones import *
+
 #Bases de Datos
 
-#Definiciónnd de Funciones
-
-
+#Definición de Funciones
 class Persona:
     def __init__(self,cedula,nombre,genero,pais,pers):
         self.cedula=cedula
@@ -44,7 +43,6 @@ class Persona:
         self.personalidad=pers
         return
     
-
     def asignarPais(self,pais):
         self.pais=pais
         return 
@@ -52,19 +50,24 @@ class Persona:
     def asignarEstado(self,estado):
         self.estado=estado
         return 
+
     def getCedula(self):
         return self.cedula
+
     def getNombre(self):
         return self.nombre
+
     def getGenero(self):
         return self.genero
+
     def getPersonalidad(self):
         return self.personalidad
+
     def getPais(self):
         return self.pais
+
     def getEstado(self):
         return self.estado
-
 
 def solicitarDatos():
     cedula=input('Ingrese su cédula con el formato #-####-####: ')
@@ -79,8 +82,6 @@ def solicitarDatos():
             return solicitarDatos()
         return solicitarDatos()
     return solicitarDatos()
-
-
 
 
 '''for i in baseDeDatos:

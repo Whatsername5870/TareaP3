@@ -4,17 +4,18 @@
 #Última Modificación: 
 #Versión: 3.10.4
 ########################
+
 #Importación de librerías
 import re
 from datetime import datetime
 import random
+
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
 
 #Funciones para Cargar Bases de Datos
-
 def fechaActual():
     """
     Funcionamiento: Genera en el formato deseado la fecha del día en que se ejecuta.
