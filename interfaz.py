@@ -254,7 +254,7 @@ def anhadirNPersonas():
         return ventanaAnhadirNPersonas()
 
 #Eliminar los datos de una persona
-def ventanaModificarAux():
+def ventanaEliminarrAux():
     """
     Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
     Entrada: N/D
@@ -266,10 +266,10 @@ def ventanaModificarAux():
             print('a')
         else:
             mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
-            return ventanaModificarAux()
+            return ventanaEliminarPersona()
     else:
         mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
-        return ventanaModificarAux()
+        return ventanaEliminarPersona()
         
 def eliminarPersona():
     """
@@ -284,10 +284,8 @@ def confirmarEliminar():
     Entrada: N/D
     Salida: 
     """
-    'cedulaA = cedula.get()'
-    ventanaModificarAux()
     
-
+    
     ventana.geometry("400x320")
     confirmarBoton.config(width=12, height=2)
     confirmarBoton.grid(row=6, column=0, sticky=E, pady=15)
@@ -325,6 +323,8 @@ def ventanaEliminarPersona():
     reportes.grid_remove()
     salir.grid_remove()
     confirmarBoton.grid_remove()
+
+    ventanaEliminarrAux()
 
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
