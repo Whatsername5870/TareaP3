@@ -29,15 +29,11 @@ def clean():
     estado.set('')
     cantidad.set('')
     cedulaCod.set('')
-<<<<<<< Updated upstream
-
-=======
     cedulaAux.set('')
     nuevaPersoAux.set('')
     personalidadAux.set('')
     cedulaAux.set('')
     nombreAux.set('')
->>>>>>> Stashed changes
 
 #Cargar Bases de Datos
 
@@ -107,6 +103,9 @@ def ventanaPrincipal():
     Entrada: N/D
     Salida: Ventana principal
     """
+    baseDeDatos = leerArchivo("BaseDatos")
+    #for i in baseDeDatos:
+        #print(i.getAll())   #Para revisar que se guarda en memoria secundaria
     clean()
     ventana.geometry("650x850")
     ventana['bg']='#FCF8E8'
@@ -154,8 +153,6 @@ def ventanaPrincipal():
     InsertarBoton.grid_remove()
     limpiarBoton.grid_remove()
     regresarBoton.grid_remove()
-<<<<<<< Updated upstream
-=======
 
     #Ocultar Botones Modificar Aux
     modificarTitulo.grid_remove()
@@ -168,7 +165,6 @@ def ventanaPrincipal():
     persoListaAuxTitulo.grid_remove()
     persoListaAux.grid_remove()
     insertarModAux.grid_remove()
->>>>>>> Stashed changes
     
 #Ventana Añadir Participantes
 
@@ -230,6 +226,7 @@ def insertarParti():
                 persona.asignarPersonalidad(persoA)
                 print(persona.getAll())
                 baseDeDatos.append(persona)
+                graba('BaseDatos',baseDeDatos)
                 mb.showinfo("Persona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
             else:
                mb.showinfo("Nombre Incorrecto", "El formato del nombre debe empezar con el nombre, un espacio, el primer apelido seguido del segundo con un guión\nEjemplo: Ana Li-Fuentes")    
@@ -285,6 +282,7 @@ def anhadirNProceso(cant):
         personaN.asignarPersonalidad(personalidadN)
         baseDeDatos.append(personaN)
         print(personaN.getAll())
+        graba('BaseDatos',baseDeDatos)
         i+=1
     return baseDeDatos
 
@@ -318,11 +316,7 @@ def ventanaModificarDatos():
     InsertarBoton.grid(row=5, column=0, sticky=E, pady=15)
     limpiarBoton.config(width=12, height=2)
     limpiarBoton.grid(row=5, column=1, pady=15)
-<<<<<<< Updated upstream
-    regresarBoton.grid(row=6, column=3 ,sticky=E, pady=15)
-=======
     botonRegresarPequeño.grid(row=6, column=3 ,sticky=E, pady=15)
->>>>>>> Stashed changes
 
     #Ocultar botones de ventana principal
     titulo.grid_remove()
@@ -336,8 +330,6 @@ def ventanaModificarDatos():
     salir.grid_remove()
     regresarBoton.grid_remove()
     insertar.grid_remove()
-<<<<<<< Updated upstream
-=======
     #Ocultar Botones Modificar Aux
     modificarTitulo.grid_remove()
     cedulaAuxTitulo.grid_remove()
@@ -350,7 +342,6 @@ def ventanaModificarDatos():
     persoListaAux.grid_remove()
     botonRegresarPequeño.grid_remove()
     insertarModAux.grid_remove()
->>>>>>> Stashed changes
 
 def ventanaModificarAux():
     """
@@ -360,16 +351,6 @@ def ventanaModificarAux():
     """
     if validarCedula(cedulaCod.get()):
         if not validarEnCedulas(cedulaCod.get()):
-<<<<<<< Updated upstream
-            ventana.geometry("600x420")
-            print('a')
-        else:
-            mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
-            return ventanaModificarAux()
-    else:
-        mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
-        return ventanaModificarAux()
-=======
             ventana.geometry("650x350")
             modificarTitulo.grid(row=0, column=0, sticky=W, columnspan=2)
             cedulaAuxTitulo.grid(row=1, column=0)
@@ -411,15 +392,14 @@ def modificarPersonalidad():
             print(persona.getAll())
             persona.asignarPersonalidad(obtenerPersonalidad(personalidadNueva))
             print(persona.getAll()) #Respaldar en Memoria Secundaria
-
->>>>>>> Stashed changes
-
+        
 def mostrarModificarDatos():
     for persona in baseDeDatos:
         if persona.getCedula()==cedulaCod.get():
             if not persona.getPersonalidad()==obtenerPersonalidad(nuevaPersoAux.get()):
                 modificarPersonalidad()
                 mb.showinfo("Cambios Realizados", "La personalidad de la persona ha cambiado.")
+                graba('BaseDatos',baseDeDatos)
                 return ventanaPrincipal()
             else:
                 mb.showerror('Error',"Esta persona ya cuenta con esa personalidad.")
@@ -488,15 +468,6 @@ regresarBoton = Button(ventana, text='Regresar',command=ventanaPrincipal)
 
 #Botones para Modificar Aux
 
-<<<<<<< Updated upstream
-AuxCedulaTitulo= StringVar()
-modificarTitulo =  Label(ventana, text="Motivo de darse de baja", font=("Times", 20))
-motivoLabel = Label(ventana, text="Motivo")
-motivoEntrada = Entry(ventana)
-motivoBoton = Button(ventana, text="Dar baja")
-
-
-=======
 cedulaAux = StringVar()
 nombreAux=StringVar()
 personalidadAux=StringVar()
@@ -514,53 +485,9 @@ persoListaAux = Combobox(ventana, state='readonly',values=[opciones[0],opciones[
 opciones[5],opciones[6],opciones[7],opciones[8],opciones[9],opciones[10],opciones[11],opciones[12],opciones[13],opciones[14],
 opciones[15]],textvariable=nuevaPersoAux)
 insertarModAux = Button(ventana,text='Ingresar',command=mostrarModificarDatos)
->>>>>>> Stashed changes
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Función para Limpiar
-
-
-
-
-
-
-
-
 
 
 #PP
+
 ventanaPrincipal()
 ventana.mainloop()

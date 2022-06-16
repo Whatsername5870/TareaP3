@@ -5,11 +5,10 @@
 #Versión: 3.10.4
 ########################
 #Importación de librerías
-import re
 from datetime import datetime
 import random
 import names
-from numpy import True_
+import pickle
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
@@ -111,3 +110,28 @@ def generarPersoRandom():
     tipo=random.randint(0,3)
     subtipo=random.randint(0,3)
     return tipo,subtipo
+
+
+def graba(nomArchGrabar,dato):
+    #Función que graba un archivo con una lista de estudiantes
+    try:
+        f=open(nomArchGrabar,"wb")
+        pickle.dump(dato,f)
+        f.close()
+    except:
+        print("Error al grabar el archivo: ", nomArchGrabar)
+
+def leerArchivo(nombreArchivo):
+    """
+    Funcionamiento: Lee archivo en el disco duro
+    Entrada: Nombre del archivo en el disco
+    Salida N/D
+    """
+    baseDatos = []
+    try:
+        f=open(nombreArchivo, "rb")
+        baseDatos = pickle.load(f)
+        f.close()
+    except:
+        "Aquí no pasa nada"
+    return baseDatos
