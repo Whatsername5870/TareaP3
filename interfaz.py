@@ -15,7 +15,6 @@ from funciones import*
 from validaciones import *
 from Clase import *
 import xml.etree.cElementTree as ET
-from xml.dom import minidom
 
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
@@ -120,7 +119,6 @@ def ventanaPrincipal():
     if len(baseDeDatos)>0:
         modificar.config(state=ACTIVE)
         eliminar.config(state=ACTIVE)
-        'xml.config(state=ACTIVE)'
 
     #Ocultar Botones de Personas
 
@@ -151,6 +149,16 @@ def ventanaPrincipal():
     eliminarBoton.grid_remove()
     confirmarBoton.grid_remove()
     cedulaEntradaE.grid_remove()
+
+    #Ocultar Botones de Reportes
+    tituloReportes.grid_remove()
+    reportePersonalidad.grid_remove()
+    reporteTipo.grid_remove()
+    reportePersona.grid_remove()
+    reporteBDBoton.grid_remove()
+    reporteRetiradosBoton.grid_remove()
+    reportePorPaisBoton.grid_remove()
+    botonRegresarPequeño.grid_remove()
 
 #Ventana Añadir Participantes
 def ventanaAnhadirPersona():
