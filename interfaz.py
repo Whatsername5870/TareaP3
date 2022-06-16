@@ -14,6 +14,7 @@ from tkinter import messagebox as mb
 from funciones import*
 from validaciones import *
 from Clase import *
+import xml.etree.cElementTree as ET
 
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
@@ -118,6 +119,7 @@ def ventanaPrincipal():
     if len(baseDeDatos)>0:
         modificar.config(state=ACTIVE)
         eliminar.config(state=ACTIVE)
+        'xml.config(state=ACTIVE)'
 
     #Ocultar Botones de Personas
 
@@ -254,7 +256,7 @@ def anhadirNPersonas():
         return ventanaAnhadirNPersonas()
 
 #Eliminar los datos de una persona
-def ventanaEliminarrAux():
+def ventanaEliminarAux():
     """
     Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
     Entrada: N/D
@@ -324,7 +326,38 @@ def ventanaEliminarPersona():
     salir.grid_remove()
     confirmarBoton.grid_remove()
 
-    ventanaEliminarrAux()
+#Crear XML
+def crearXML():
+    """
+    Funcionamiento: Crea un archivo XML con los datos del diccionario de personalidades
+    Entrada: N/D
+    Salida: 
+    """
+    print(personalidades)
+    auxtipo=subtipo=codigo=''
+    contA=1
+    aux=[]
+    try:
+        personalidad = ET.Element("personalidades")
+        for i in personalidades:
+            auxtipo=i
+            tipo = ET.SubElement(personalidad,auxtipo)
+            aux = personalidades.get(i)
+            for j in aux:
+                subtipo=j[0]
+                codigo=j[1]
+                ET.SubElement(tipo, "subtipo"+str(contA)).text = subtipo
+                ET.SubElement(tipo, "codigo"+str(contA)).text = codigo
+            contA+=1
+
+        arbol = ET.ElementTree(personalidad)
+        arbol.write("PersonalidadesXML.xml")
+    
+        mb.showinfo("Información", "Los datos de las Personalidades han sido guardadas en 'PersonalidadesXML.xml' ")
+    except:
+        mb.showinfo("ERROR", "No se pudo crear el archivo XML de las Personalidades")
+    
+    
 
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
@@ -333,7 +366,7 @@ insertarPart = Button(ventana, text="Insertar un participante",height=2, width=6
 insertarNPart = Button(ventana, text="Insertar N participantes",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=ventanaAnhadirNPersonas,state=DISABLED)
 modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
 eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390', command=ventanaEliminarPersona,state=DISABLED)
-xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
+xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',command=crearXML,state=ACTIVE)
 reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
 salir = Button(ventana, text="Salir",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861', command=ventana.quit)
 
@@ -378,7 +411,7 @@ limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
 tituloEliminar = Label(ventana, text="Eliminando Persona", font=("Times", 20))
 solititarCedula = Label(ventana, text="Digite una cédula: ")
 cedulaEntradaE = Entry(ventana, textvariable=cedula)
-eliminarBoton = Button(ventana, text="Eliminar", command=confirmarEliminar)
+eliminarBoton = Button(ventana, text="Eliminar", command=ventanaEliminarAux)
 solititarJustificacion = Label(ventana, text="Justifique: ")
 confirmarBoton = Button(ventana, text="Confirmar", command=eliminarPersona)
 
