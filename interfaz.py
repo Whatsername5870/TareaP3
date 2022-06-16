@@ -15,6 +15,7 @@ from funciones import*
 from validaciones import *
 from Clase import *
 import xml.etree.cElementTree as ET
+from xml.dom import minidom
 
 #Bases de Datos
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
@@ -258,7 +259,7 @@ def anhadirNPersonas():
 #Eliminar los datos de una persona
 def ventanaEliminarAux():
     """
-    Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
+    Funcionamiento: Valida que la cédula exista antes de eliminarla
     Entrada: N/D
     Salida: Ventanta para escribir motivo
     """
@@ -282,7 +283,7 @@ def eliminarPersona():
 
 def confirmarEliminar():
     """
-    Funcionamiento: Pide una confirmación antes de eliminar a una persona de la BD
+    Funcionamiento: Crea la ventanta para escribir el motivo de darse de baja
     Entrada: N/D
     Salida: 
     """
@@ -331,33 +332,126 @@ def crearXML():
     """
     Funcionamiento: Crea un archivo XML con los datos del diccionario de personalidades
     Entrada: N/D
-    Salida: 
+    Salida: mensaje(showinfo)
     """
     print(personalidades)
-    auxtipo=subtipo=codigo=''
+    subtipo=codigo=''
     contA=1
     aux=[]
     try:
+        
         personalidad = ET.Element("personalidades")
         for i in personalidades:
-            auxtipo=i
-            tipo = ET.SubElement(personalidad,auxtipo)
+            tipo = ET.SubElement(personalidad,i)
             aux = personalidades.get(i)
             for j in aux:
                 subtipo=j[0]
-                codigo=j[1]
+                codigo=j[1]       
                 ET.SubElement(tipo, "subtipo"+str(contA)).text = subtipo
                 ET.SubElement(tipo, "codigo"+str(contA)).text = codigo
             contA+=1
-
         arbol = ET.ElementTree(personalidad)
         arbol.write("PersonalidadesXML.xml")
-    
+        
+        
+
         mb.showinfo("Información", "Los datos de las Personalidades han sido guardadas en 'PersonalidadesXML.xml' ")
     except:
         mb.showinfo("ERROR", "No se pudo crear el archivo XML de las Personalidades")
     
+#Reportes
+def ventanaReportes():
+    """
+    Funcionamiento: Ventana donde se ubican todos los reportes
+    Entrada: N/D
+    Salida: N/D
+    """
+    ventana.geometry("650x850")
+    ventana['bg']='#FCF8E8'
+    tituloReportes.grid(row=0, column=0, pady=20)
+    reportePersonalidad.grid(row=1, column=0, padx=15, pady=15) 
+    reporteTipo.grid(row=2, column=0, padx=15) 
+    reportePersona.grid(row=3, column=0, padx=15, pady=15)
+    reporteBDBoton.grid(row=4, column=0, padx=15)
+    reporteRetiradosBoton.grid(row=5, column=0, padx=15, pady=15)
+    reportePorPaisBoton.grid(row=6, column=0, padx=20)
+    botonRegresarPequeño.config(width=15, height=2)
+    botonRegresarPequeño.grid(row=12, column=2, sticky=E,pady=15)
     
+    
+    #Ocultar botones de ventana principal
+    titulo.grid_remove()
+    cargarBD.grid_remove()
+    insertarPart.grid_remove()
+    insertarNPart.grid_remove()
+    modificar.grid_remove()
+    eliminar.grid_remove()
+    xml.grid_remove()
+    reportes.grid_remove()
+    salir.grid_remove()
+
+def reportePersonalidades():
+    """
+    Funcionamiento: Crea un archivo HTML donde imprime un reporte del diccionario personalidades
+    Entrada: N/D
+    Salida: 
+    """
+
+def reporteTipoPersonalidad():
+    """
+    Funcionamiento: Crea una ventana para elegir un tipo de personalidad y crear un archivo HTML
+    Entrada: N/D
+    Salida: 
+    """
+    ventana.geometry("400x120")
+    tituloAñadirN.grid(row=0, column=0, sticky=W, columnspan=2)
+    cantidadLabel.grid(row=1, column=0)
+    cantidadEntrada.grid(row=1, column=1)
+    insertarBotonN.config(width=12, height=2)
+    insertarBotonN.grid(row=2, column=0, sticky=E, pady=15)
+    limpiarBotonN.config(width=12, height=2)
+    limpiarBotonN.grid(row=2, column=1, pady=15)
+    botonRegresarPequeño.grid(row=2, column=2, sticky=E, pady=15)
+
+    #Ocultar botones de ventana principal
+    titulo.grid_remove()
+    cargarBD.grid_remove()
+    insertarPart.grid_remove()
+    insertarNPart.grid_remove()
+    modificar.grid_remove()
+    eliminar.grid_remove()
+    xml.grid_remove()
+    reportes.grid_remove()
+    salir.grid_remove()
+
+def reporteInfoPersona():
+    """
+    Funcionamiento: Crea una ventana donde se solicita la cédula, y si existe crea un archivo HTML con su información
+    Entrada: N/D
+    Salida: 
+    """
+
+def reporteBD():
+    """
+    Funcionamiento: Crea un archivo HTML donde imprime la informacion de cada persona alternando 2 colores por fila
+    Entrada: N/D
+    Salida: 
+    """
+
+def reporteRetirados():
+    """
+    Funcionamiento: Crea un archivo HTML donde imprime los reportes de las personas retiradas
+    Entrada: N/D
+    Salida: 
+    """
+
+def reportePorPais():
+    """
+    Funcionamiento: Crea un archivo HTML donde imprime los reportes de las personas dividido por paises, activos o no, mostrando su estado
+    Entrada: N/D
+    Salida: 
+    """
+
 
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
@@ -414,6 +508,15 @@ cedulaEntradaE = Entry(ventana, textvariable=cedula)
 eliminarBoton = Button(ventana, text="Eliminar", command=ventanaEliminarAux)
 solititarJustificacion = Label(ventana, text="Justifique: ")
 confirmarBoton = Button(ventana, text="Confirmar", command=eliminarPersona)
+
+#Botones Reportes
+tituloReportes=Label(ventana, text="Reporte", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
+reportePersonalidad=Button(ventana, text="Reporte Personalidades",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=reportePersonalidades,state=ACTIVE)
+reporteTipo = Button(ventana, text="Reporte Tipo de Personalidad",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=reporteTipoPersonalidad,state=ACTIVE)
+reportePersona = Button(ventana, text="Reporte de una Persona",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=reporteInfoPersona,state=ACTIVE)
+reporteBDBoton = Button(ventana, text="Reporte de la BD",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F', command=reporteBD,state=ACTIVE)
+reporteRetiradosBoton = Button(ventana, text="Reporte Retirados",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F', command=reporteRetirados,state=ACTIVE)
+reportePorPaisBoton= Button(ventana, text="Reporte por País",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=reportePorPais,state=ACTIVE)
 
 
 
