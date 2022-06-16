@@ -29,7 +29,15 @@ def clean():
     estado.set('')
     cantidad.set('')
     cedulaCod.set('')
+<<<<<<< Updated upstream
 
+=======
+    cedulaAux.set('')
+    nuevaPersoAux.set('')
+    personalidadAux.set('')
+    cedulaAux.set('')
+    nombreAux.set('')
+>>>>>>> Stashed changes
 
 #Cargar Bases de Datos
 
@@ -146,6 +154,21 @@ def ventanaPrincipal():
     InsertarBoton.grid_remove()
     limpiarBoton.grid_remove()
     regresarBoton.grid_remove()
+<<<<<<< Updated upstream
+=======
+
+    #Ocultar Botones Modificar Aux
+    modificarTitulo.grid_remove()
+    cedulaAuxTitulo.grid_remove()
+    cedulaAuxEntrada.grid_remove()
+    nombreAuxTitulo.grid_remove()
+    nombreAuxEntrada.grid_remove()
+    personalidadAuxTitulo.grid_remove()
+    personalidadAuxEntrada.grid_remove()
+    persoListaAuxTitulo.grid_remove()
+    persoListaAux.grid_remove()
+    insertarModAux.grid_remove()
+>>>>>>> Stashed changes
     
 #Ventana Añadir Participantes
 
@@ -295,7 +318,11 @@ def ventanaModificarDatos():
     InsertarBoton.grid(row=5, column=0, sticky=E, pady=15)
     limpiarBoton.config(width=12, height=2)
     limpiarBoton.grid(row=5, column=1, pady=15)
+<<<<<<< Updated upstream
     regresarBoton.grid(row=6, column=3 ,sticky=E, pady=15)
+=======
+    botonRegresarPequeño.grid(row=6, column=3 ,sticky=E, pady=15)
+>>>>>>> Stashed changes
 
     #Ocultar botones de ventana principal
     titulo.grid_remove()
@@ -309,6 +336,21 @@ def ventanaModificarDatos():
     salir.grid_remove()
     regresarBoton.grid_remove()
     insertar.grid_remove()
+<<<<<<< Updated upstream
+=======
+    #Ocultar Botones Modificar Aux
+    modificarTitulo.grid_remove()
+    cedulaAuxTitulo.grid_remove()
+    cedulaAuxEntrada.grid_remove()
+    nombreAuxTitulo.grid_remove()
+    nombreAuxEntrada.grid_remove()
+    personalidadAuxTitulo.grid_remove()
+    personalidadAuxEntrada.grid_remove()
+    persoListaAuxTitulo.grid_remove()
+    persoListaAux.grid_remove()
+    botonRegresarPequeño.grid_remove()
+    insertarModAux.grid_remove()
+>>>>>>> Stashed changes
 
 def ventanaModificarAux():
     """
@@ -318,6 +360,7 @@ def ventanaModificarAux():
     """
     if validarCedula(cedulaCod.get()):
         if not validarEnCedulas(cedulaCod.get()):
+<<<<<<< Updated upstream
             ventana.geometry("600x420")
             print('a')
         else:
@@ -326,7 +369,61 @@ def ventanaModificarAux():
     else:
         mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
         return ventanaModificarAux()
+=======
+            ventana.geometry("650x350")
+            modificarTitulo.grid(row=0, column=0, sticky=W, columnspan=2)
+            cedulaAuxTitulo.grid(row=1, column=0)
+            cedulaAuxEntrada.grid(row=1, column=1)
+            nombreAuxTitulo.grid(row=2, column=0)
+            nombreAuxEntrada.grid(row=2, column=1)
+            personalidadAuxTitulo.grid(row=3, column=0)
+            personalidadAuxEntrada.grid(row=3, column=1, pady=15)
+            persoListaAuxTitulo.grid(row=4, column=0, sticky=E, pady=15)
+            persoListaAux.grid(row=4, column=1, sticky=E, pady=15)
+            insertarModAux.grid(row=8,column=0)
+            limpiarBoton.grid(row=8,column=1)
+            insertarModAux.config(width=12, height=2)
+            botonRegresarPequeño.grid(row=8,column=2)
+            for persona in baseDeDatos:
+                if persona.getCedula()==cedulaCod.get():
+                    cedulaAux.set(persona.getCedula())
+                    nombreAux.set(persona.getNombre())
+                    personalidadAux.set(traducirPersonalidad(persona.getPersonalidad()))
+                    
+            #Ocultar Botones de Modificar Principal
+            tituloModificar.grid_remove()
+            cedulaCodTitulo.grid_remove()
+            cedulaCodEntrada.grid_remove()
+            InsertarBoton.grid_remove()
+            regresarBoton.grid_remove()
+        else:
+            mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
+            return ventanaPrincipal()
+    else:
+        mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
+        return ventanaPrincipal()
+#Modificar Función
+def modificarPersonalidad():
+    personalidadNueva=nuevaPersoAux.get()
+    cedula=cedulaCod.get()
+    for persona in baseDeDatos:
+        if persona.getCedula()==cedula:
+            print(persona.getAll())
+            persona.asignarPersonalidad(obtenerPersonalidad(personalidadNueva))
+            print(persona.getAll()) #Respaldar en Memoria Secundaria
 
+>>>>>>> Stashed changes
+
+def mostrarModificarDatos():
+    for persona in baseDeDatos:
+        if persona.getCedula()==cedulaCod.get():
+            if not persona.getPersonalidad()==obtenerPersonalidad(nuevaPersoAux.get()):
+                modificarPersonalidad()
+                mb.showinfo("Cambios Realizados", "La personalidad de la persona ha cambiado.")
+                return ventanaPrincipal()
+            else:
+                mb.showerror('Error',"Esta persona ya cuenta con esa personalidad.")
+                return ventanaPrincipal()
 
 
 #Botones Ventana Principal
@@ -391,6 +488,7 @@ regresarBoton = Button(ventana, text='Regresar',command=ventanaPrincipal)
 
 #Botones para Modificar Aux
 
+<<<<<<< Updated upstream
 AuxCedulaTitulo= StringVar()
 modificarTitulo =  Label(ventana, text="Motivo de darse de baja", font=("Times", 20))
 motivoLabel = Label(ventana, text="Motivo")
@@ -398,6 +496,25 @@ motivoEntrada = Entry(ventana)
 motivoBoton = Button(ventana, text="Dar baja")
 
 
+=======
+cedulaAux = StringVar()
+nombreAux=StringVar()
+personalidadAux=StringVar()
+nuevaPersoAux = StringVar()
+
+modificarTitulo =  Label(ventana, text="Motivo de darse de baja", font=("Times", 20))
+cedulaAuxTitulo = Label(ventana, text="Cédula")
+cedulaAuxEntrada = Entry(ventana,state=DISABLED,textvariable=cedulaAux)
+nombreAuxTitulo = Label(ventana, text="Nombre")
+nombreAuxEntrada = Entry(ventana,state=DISABLED,textvariable=nombreAux)
+personalidadAuxTitulo = Label(ventana, text="Personalidad Registrasa")
+personalidadAuxEntrada = Entry(ventana,state=DISABLED,textvariable=personalidadAux)
+persoListaAuxTitulo = Label(ventana,text='Nueva personalidad')
+persoListaAux = Combobox(ventana, state='readonly',values=[opciones[0],opciones[1],opciones[2],opciones[3],opciones[4],
+opciones[5],opciones[6],opciones[7],opciones[8],opciones[9],opciones[10],opciones[11],opciones[12],opciones[13],opciones[14],
+opciones[15]],textvariable=nuevaPersoAux)
+insertarModAux = Button(ventana,text='Ingresar',command=mostrarModificarDatos)
+>>>>>>> Stashed changes
 
 
 
