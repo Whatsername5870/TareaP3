@@ -6,9 +6,14 @@
 ########################
 #Validaciones
 import re
-
+from funciones import *
 def validarCedula(cedula):
     if re.match('^\d{1}\-{1}\d{4}\-{1}\d{4}$',cedula):
+        return True
+    return False
+
+def validarEnCedulas(cedula):
+    if cedula not in cedulas:
         return True
     return False
 

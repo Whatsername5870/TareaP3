@@ -17,52 +17,44 @@ from funciones import *
 
 
 class Persona:
-    def __init__(self,cedula,nombre,genero,pais):
-        self.cedula=cedula
-        self.nombre=nombre
-        self.genero=genero
-        self.personalidad=()
-        self.pais=pais
+    def __init__(self):
+        self.cedula=""
+        self.nombre=""
+        self.genero=True
+        self.personalidad=(0,0)
+        self.pais=0
         self.estado=[True,"",""]
 
     def asignarCedula(self,cedula):
         self.cedula=cedula
         return 
-
     def asignarNombre(self,nombre):
         self.nombre=nombre
         return 
 
     def asignarGenero(self,genero):
-        if int(genero)==1:
+        if genero==True:
             self.genero=True
         else:
             self.genero=False
         return 
 
     def asignarPersonalidad(self,pers):
-        cont=0
-        for i in personalidades:
-            cont2=0
-            for tup in personalidades[i]:
-                if tup[0]==pers:
-                    self.personalidad=(cont,cont2)
-                cont2+=1
-            cont+=1
-        return 
-
+        self.personalidad=pers
+        return
     def asignarPais(self,pais):
-        self.pais=random.choice(paises)
+        self.pais=pais
         return 
-        
-    def asignarEstado(self,estado):
-        self.estado=estado
-        return 
+    def asignarEstado(self,comen,fecha):#Si se asigna es porque cambia a False
+        self.estado=[False,comen,fecha] 
+        return
     def getCedula(self):
         return self.cedula
     def getNombre(self):
         return self.nombre
     def getGenero(self):
+        if self.genero==True:
+            return True
         return self.genero
     def getPersonalidad(self):
         return self.personalidad
@@ -70,23 +62,10 @@ class Persona:
         return self.pais
     def getEstado(self):
         return self.estado
-
-
-def solicitarDatos():
-    cedula=input('Ingrese su cédula con el formato #-####-####: ')
-    if validarCedula(cedula):
-        nombre=input('Ingrese su nombre con el formato Nombre Apellido1-Apellido2: ')
-        if validarNombre(nombre):
-            genero=input('Ingrese el genero.\n1- Hombre\n2- Mujer\nEscoga la opciÃ³n: ')
-            if validarGenero(genero):
-                persona=Persona(cedula,nombre,genero)
-                baseDeDatos.append(persona) 
-                return 'Registro Excitoso'
-            return solicitarDatos()
-        return solicitarDatos()
-    return solicitarDatos()
-
-
+    def getAll(self):
+        return 'Cédula: '+self.cedula+'\nNombre: '+self.nombre+'\nGénero: '+\
+        str(traducirGenero(self.genero))+'\nPaís: '+str(traducirPaisSTR(self.pais))\
+        +'\nPersonalidad: '+str(traducirPersonalidad(self.personalidad))+'\nEstado: '+str(traducirEstado(self.estado))+'\n'
 
 
 '''for i in baseDeDatos:
