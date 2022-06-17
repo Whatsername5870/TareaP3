@@ -11,7 +11,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import Combobox
 from tkinter import messagebox as mb
-from funciones import*
+from funciones import *
 from validaciones import *
 from Clase import *
 import xml.etree.cElementTree as ET
@@ -36,6 +36,7 @@ def clean():
     personalidadCaja.set('')
     estado.set('')
     cantidad.set('')
+    tipo.set('')
 
 #Cargar Bases de Datos
 def cargarBaseDatosPaises():
@@ -119,6 +120,7 @@ def ventanaPrincipal():
     if len(baseDeDatos)>0:
         modificar.config(state=ACTIVE)
         eliminar.config(state=ACTIVE)
+        reportes.config(state=ACTIVE)
 
     #Ocultar Botones de Personas
 
@@ -158,7 +160,6 @@ def ventanaPrincipal():
     reporteBDBoton.grid_remove()
     reporteRetiradosBoton.grid_remove()
     reportePorPaisBoton.grid_remove()
-    botonRegresarPequeño.grid_remove()
 
 #Ventana Añadir Participantes
 def ventanaAnhadirPersona():
@@ -374,7 +375,7 @@ def ventanaReportes():
     Entrada: N/D
     Salida: N/D
     """
-    ventana.geometry("650x850")
+    ventana.geometry("650x650")
     ventana['bg']='#FCF8E8'
     tituloReportes.grid(row=0, column=0, pady=20)
     reportePersonalidad.grid(row=1, column=0, padx=15, pady=15) 
@@ -384,7 +385,7 @@ def ventanaReportes():
     reporteRetiradosBoton.grid(row=5, column=0, padx=15, pady=15)
     reportePorPaisBoton.grid(row=6, column=0, padx=20)
     botonRegresarPequeño.config(width=15, height=2)
-    botonRegresarPequeño.grid(row=12, column=2, sticky=E,pady=15)
+    botonRegresarPequeño.grid(row=7, column=0, pady=15)
     
     
     #Ocultar botones de ventana principal
@@ -397,10 +398,26 @@ def ventanaReportes():
     xml.grid_remove()
     reportes.grid_remove()
     salir.grid_remove()
+    #Botones ReporteTipos
+    tituloReporteTipos.grid_remove()
+    selecccionarTipo.grid_remove()
+    tipoCombobox.grid_remove()
+    generarBotonTipos.grid_remove()
+    limpiarBotonN.grid_remove()
+    regresarReportes.grid_remove()
 
 def reportePersonalidades():
     """
     Funcionamiento: Crea un archivo HTML donde imprime un reporte del diccionario personalidades
+    Entrada: N/D
+    Salida: showinfo (mensaje)
+    """
+    generarHtmlPersonalidades()
+    return mb.showinfo("Información", "Archivo 'PersonalidadesHTML' de tipo html ha sido creado")
+
+def genererReporteTipo():
+    """
+    Funcionamiento: Crea un archivo HTML con los datos especificados
     Entrada: N/D
     Salida: 
     """
@@ -412,16 +429,25 @@ def reporteTipoPersonalidad():
     Salida: 
     """
     ventana.geometry("400x120")
-    tituloAñadirN.grid(row=0, column=0, sticky=W, columnspan=2)
-    cantidadLabel.grid(row=1, column=0)
-    cantidadEntrada.grid(row=1, column=1)
-    insertarBotonN.config(width=12, height=2)
-    insertarBotonN.grid(row=2, column=0, sticky=E, pady=15)
+    tituloReporteTipos.grid(row=0, column=0, sticky=W, columnspan=2)
+    selecccionarTipo.grid(row=1, column=0)
+    tipoCombobox.grid(row=1, column=1)
+    generarBotonTipos.config(width=12, height=2)
+    generarBotonTipos.grid(row=2, column=0, sticky=E, pady=15)
     limpiarBotonN.config(width=12, height=2)
     limpiarBotonN.grid(row=2, column=1, pady=15)
-    botonRegresarPequeño.grid(row=2, column=2, sticky=E, pady=15)
-
+    regresarReportes.grid(row=2, column=2, sticky=E, pady=15)
+    
     #Ocultar botones de ventana principal
+    tituloReportes.grid_remove()
+    reportePersonalidad.grid_remove()
+    reporteTipo.grid_remove()
+    reportePersona.grid_remove()
+    reporteBDBoton.grid_remove()
+    reporteRetiradosBoton.grid_remove()
+    reportePorPaisBoton.grid_remove()
+    botonRegresarPequeño.grid_remove()
+
     titulo.grid_remove()
     cargarBD.grid_remove()
     insertarPart.grid_remove()
@@ -469,7 +495,7 @@ insertarNPart = Button(ventana, text="Insertar N participantes",height=2, width=
 modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
 eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390', command=ventanaEliminarPersona,state=DISABLED)
 xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',command=crearXML,state=ACTIVE)
-reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
+reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',command=ventanaReportes,state=DISABLED)
 salir = Button(ventana, text="Salir",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861', command=ventana.quit)
 
 #Botones para insertar Participante
@@ -519,66 +545,27 @@ confirmarBoton = Button(ventana, text="Confirmar", command=eliminarPersona)
 
 #Botones Reportes
 tituloReportes=Label(ventana, text="Reporte", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
-reportePersonalidad=Button(ventana, text="Reporte Personalidades",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=reportePersonalidades,state=ACTIVE)
+reportePersonalidad=Button(ventana, text="Reporte Personalidades",height=2, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=reportePersonalidades,state=ACTIVE)
 reporteTipo = Button(ventana, text="Reporte Tipo de Personalidad",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=reporteTipoPersonalidad,state=ACTIVE)
 reportePersona = Button(ventana, text="Reporte de una Persona",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=reporteInfoPersona,state=ACTIVE)
 reporteBDBoton = Button(ventana, text="Reporte de la BD",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F', command=reporteBD,state=ACTIVE)
 reporteRetiradosBoton = Button(ventana, text="Reporte Retirados",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F', command=reporteRetirados,state=ACTIVE)
 reportePorPaisBoton= Button(ventana, text="Reporte por País",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=reportePorPais,state=ACTIVE)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ReporteTipos
+tituloReporteTipos = Label(ventana, text="Reporte Tipos", font=("Times", 20))
+selecccionarTipo = Label(ventana, text="Seleccione un tipo: ")
+tipo = StringVar()
+op = generarTipos(personalidades)
+tipoCombobox = Combobox(ventana, state='readonly',values=[op[0],op[1],op[2],op[3]],textvariable=tipo)
+generarBotonTipos = Button(ventana, text="Generar", command=genererReporteTipo)
+limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
+regresarReportes = Button(ventana, text="Regresar", command=ventanaReportes, width=12, height=2)
 
 
 
 
 #Función para Limpiar
 
-
-
-
-
-
-
-
-
-
-#PP
+#Programa Principal
 ventanaPrincipal()
 ventana.mainloop()

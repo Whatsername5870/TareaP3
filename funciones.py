@@ -14,6 +14,8 @@ import random
 baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
+tip=[]
+bdRespaldo={}
 
 #Funciones para Cargar Bases de Datos
 def fechaActual():
@@ -54,3 +56,59 @@ def validarCantidad(cantidad):
     if int(cantidad)<25:
         return False
     return True
+
+def generarTipos(personali):
+    """
+    Funcionamiento: Saca los tipos de personalidad y los mete a una lista
+    Entrada: N/D
+    Salida: 
+    """
+    for i in personali.keys():
+        tip.append(i)
+        print(i)
+    bdRespaldo = personali
+    return tip
+
+def generarHtmlPersonalidades():
+    """
+    Funcionamiento: Crea el archivo HTML para ReportePersonalidades
+    Entrada: N/D
+    Salida: N/D
+    """
+    tabla=""
+    f = open('PersonalidadesHTML.html','w')
+    tipAux = generarTipos(personalidades)
+
+    mensajeInicio = "<html><head></head><body><h1>"
+            
+    titulo = "Reporte Personalidades"
+
+    mensajeMedio="</h1>"
+
+    tabla+= "<table border='1'><tbody><tr>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in tipAux:
+        encabezadosTabla1="<td colspan='2'>"
+        tabla+= encabezadosTabla1+str(n)
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr><tr>"
+
+    cant=0
+    for m in bdRespaldo:
+        contenidotabla1="<td>"
+        tabla+= contenidotabla1+str(bdRespaldo[m])
+        tabla+="</td>"
+        cant+=1
+    
+    tabla+="</tr></table></tbody>"
+    print(tabla)
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+
+    f.write(mensajeCompleto)
+    f.close()
+    
+    return ''
