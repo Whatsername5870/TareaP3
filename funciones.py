@@ -10,7 +10,7 @@ import random
 import names
 import pickle
 #Bases de Datos
-baseDeDatos=[] #Será la base de datos principal, una lista de objetos
+ #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
 cedulas=[]
@@ -133,5 +133,5 @@ def leerArchivo(nombreArchivo):
         baseDatos = pickle.load(f)
         f.close()
     except:
-        "Aquí no pasa nada"
+        "No se encuentra."
     return baseDatos

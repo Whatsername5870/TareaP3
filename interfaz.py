@@ -30,6 +30,8 @@ def clean():
     cantidad.set('')
     cedulaCod.set('')
     nuevaPersoAux.set('')
+    cedulaEli.set("")
+    motivo.set("")
 
 
 #Cargar Bases de Datos
@@ -100,11 +102,12 @@ def ventanaPrincipal():
     Entrada: N/D
     Salida: Ventana principal
     """
-    baseDeDatos = leerArchivo("BaseDatos")
+    global baseDeDatos
+    baseDeDatos= leerArchivo("BaseDatos")
     for persona in baseDeDatos:
         cedulas.append(persona.getCedula())
-    for i in baseDeDatos:
-        print(i.getAll())
+    #for i in baseDeDatos:
+        #print(i.getAll())
        #Para revisar que se guarda en memoria secundaria
     clean()
     ventana.geometry("650x850")
@@ -167,7 +170,17 @@ def ventanaPrincipal():
     persoListaAuxTitulo.grid_remove()
     persoListaAux.grid_remove()
     insertarModAux.grid_remove()
-    
+
+    #Ocultar Botones Eliminar
+    eliminarTitulo.grid_remove()
+    cedulaEliTitulo.grid_remove()
+    cedulaEliEntrada.grid_remove()
+    motivoTitulo.grid_remove()
+    motivoEntrada.grid_remove()
+    ingresarMotivo.grid_remove()
+    limpiarMotivo.grid_remove()
+    regresarMotivo.grid_remove()
+    ingresarMotivoAux.grid_remove()
 #Ventana Añadir Participantes
 
 def ventanaAnhadirPersona():
@@ -220,8 +233,8 @@ def insertarParti():
     persoA = obtenerPersonalidad(personalidadCaja.get())
     if validarCedula(cedulaA):
         if validarEnCedulas(cedulaA):
-            cedulas.append(cedulaA)
-            if validarNombre(nombreA):#Hacer función alambrada con las personalidades
+            if validarNombre(nombreA):
+                cedulas.append(cedulaA)
                 persona=Persona() 
                 persona.asignarCedula(cedulaA)
                 persona.asignarNombre(nombreA)
@@ -323,12 +336,6 @@ def ventanaModificarDatos():
     regresarBoton.config(width=12, height=2)
     regresarBoton.grid(row=2, column=2, pady=10)
     
-    '''
-    insertarBotonN.config(width=12, height=2)
-    insertarBotonN.grid(row=2, column=0, sticky=E, pady=15)
-    limpiarBotonN.config(width=12, height=2)
-    limpiarBotonN.grid(row=2, column=1, pady=15)
-    botonRegresarPequeño.grid(row=2, column=2, pady=15'''
     #Ocultar botones de ventana principal
     titulo.grid_remove()
     cargarBD.grid_remove()
@@ -379,7 +386,6 @@ def ventanaModificarAux():
             botonRegresarPequeño.config(width=12, height=2)
             for persona in baseDeDatos:
                 if persona.getCedula()==cedulaCod.get():
-                    print('a')
                     cedulaAux.set(persona.getCedula())
                     nombreAux.set(persona.getNombre())
                     personalidadAux.set(traducirPersonalidad(persona.getPersonalidad()))
@@ -418,15 +424,81 @@ def mostrarModificarDatos():
                 mb.showerror('Error',"Esta persona ya cuenta con esa personalidad.")
                 return ventanaPrincipal()
 
+def ventanaEliminar():
+    ventana.geometry("320x120")
+    eliminarTitulo.grid(row=0,column=0,sticky=W, columnspan=2)
+    cedulaEliTitulo.grid(row=2, column=0)
+    cedulaEliEntrada.grid(row=2, column=1)
+    limpiarMotivo.config(width=12, height=2)
+    limpiarMotivo.grid(row=3, column=1, pady=10)
+    ingresarMotivo.grid(row=3, column=0, pady=10)
+    ingresarMotivo.config(width=12, height=2)
+    regresarMotivo.grid(row=3, column=2, pady=10)
+    regresarMotivo.config(width=12, height=2)
+    #Ocultar botones de ventana principal
+    titulo.grid_remove()
+    cargarBD.grid_remove()
+    insertarPart.grid_remove()
+    insertarNPart.grid_remove()
+    modificar.grid_remove()
+    eliminar.grid_remove()
+    xml.grid_remove()
+    reportes.grid_remove()
+    salir.grid_remove()
+    botonRegresarPequeño.grid_remove()
+    insertar.grid_remove()
+    #Ocultar Botones Eliminar Auxiliar
+    ingresarMotivoAux.grid_remove()
 
+def ventanaEliminarAux():
+    if validarCedula(cedulaEli.get()):
+        if not validarEnCedulas(cedulaEli.get()):
+            ventana.geometry("320x140")
+            eliminarTitulo.grid(row=0,column=0,sticky=W, columnspan=2)
+            motivoTitulo.grid(row=1, column=0, pady=10)
+            motivoEntrada.grid(row=1, column=1, pady=10)
+            ingresarMotivoAux.config(width=12, height=2)
+            ingresarMotivoAux.grid(row=2, column=0)
+            limpiarMotivo.config(width=12, height=2)
+            limpiarMotivo.grid(row=2, column=1)
+            regresarMotivo.config(width=12, height=2)
+            regresarMotivo.grid(row=2, column=2)
+
+            #Ocultar Botones Eliminar Principal)
+            cedulaEliTitulo.grid_remove()
+            cedulaEliEntrada.grid_remove()
+            ingresarMotivo.grid_remove()
+        else:
+            mb.showinfo("Cédula desconocida", "La cédula no se encuentra en la base de datos.")
+            return ventanaPrincipal()
+    else:
+        mb.showerror("Formato Incorrecto", "Ingrese la cédula con el formato de la forma: #-####-####")
+        return ventanaPrincipal()
+
+def mostrarEliminar():
+    #Aquí iría el Yes or No 
+    eliminarPersona()
+    mb.showinfo("Cambios Realizados", "El estado de la persona ha cambiado.")
+    graba('BaseDatos',baseDeDatos)
+    return ventanaPrincipal()
+
+def eliminarPersona():
+    cedulaE = cedulaEli.get()
+    motivoE = motivo.get()
+    fecha = fechaActual()
+    for persona in baseDeDatos:
+        if persona.getCedula()==cedulaE:
+            persona.asignarEstado(motivoE,fecha)
+            print(persona.getEstado())
+            print(persona.getAll())
 #Botones Ventana Principal
 titulo=Label(ventana, text="Personalidades", font=("Imprint MT Shadow", 40),bg='#FCF8E8')
 cargarBD=Button(ventana, text="Cargar Bases de Datos",height=3, width=65,font=("Arial",12), bd=5,bg='#94B49F',command=lambda:[cargarBaseDatosPaises(), cargarBaseDatosPerso()])
 insertarPart = Button(ventana, text="Insertar un participante",height=2, width=65,font=("Arial",12),bd=5, bg='#94B49F',command=ventanaAnhadirPersona,state=DISABLED)
 insertarNPart = Button(ventana, text="Insertar N participantes",height=2, width=65,font=("Arial",12),bd=5,bg='#94B49F', command=ventanaAnhadirNPersonas,state=DISABLED)
 modificar= Button(ventana, text="Modificar Participante",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',command=ventanaModificarDatos,state=DISABLED,)
-eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED)
-xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,)
+eliminar = Button(ventana, text="Eliminar Datos de una Persona",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED,command=ventanaEliminar)
+xml= Button(ventana, text="Crear XML",height=2, width=65,font=("Arial",12),bd=5, bg='#ECB390',state=DISABLED)
 reportes = Button(ventana, text="Reportes",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861',state=DISABLED)
 salir = Button(ventana, text="Salir",height=2, width=65,font=("Arial",12),bd=5,bg='#DF7861', command=ventana.quit)
 
@@ -476,7 +548,7 @@ tituloModificar = Label(ventana, text="Modificar Datos", font=("Times", 20),bg='
 cedulaCodTitulo = Label(ventana, text="Cédula de la Persona",bg='#FCF8E8')
 cedulaCodEntrada = Entry(ventana, textvariable=cedulaCod)
 InsertarBoton = Button(ventana, text="Insertar",command=ventanaModificarAux,bg='#94B49F')
-limpiarBoton = Button(ventana, text="Limpiar", command=clean)
+limpiarBoton = Button(ventana, text="Limpiar", command=clean,bg='#FCF8E8')
 regresarBoton = Button(ventana, text='Regresar',command=ventanaPrincipal,bg='#DF7861')
 
 #Botones para Modificar Aux
@@ -485,7 +557,7 @@ cedulaAux = StringVar()
 nombreAux=StringVar()
 personalidadAux=StringVar()
 nuevaPersoAux = StringVar()
-modificarTitulo =  Label(ventana, text="Motivo de darse de baja", font=("Times", 20),bg='#FCF8E8')
+modificarTitulo =  Label(ventana, text="Modificar Personalidad", font=("Times", 20),bg='#FCF8E8')
 cedulaAuxTitulo = Label(ventana, text="Cédula",bg='#FCF8E8')
 cedulaAuxEntrada = Entry(ventana,state=DISABLED,textvariable=cedulaAux)
 nombreAuxTitulo = Label(ventana, text="Nombre",bg='#FCF8E8')
@@ -499,7 +571,21 @@ opciones[15]],textvariable=nuevaPersoAux)
 insertarModAux = Button(ventana,text='Ingresar',command=mostrarModificarDatos,bg='#94B49F')
 
 
+#Botones para Eliminar
+cedulaEli = StringVar()
+motivo = StringVar()
+
+eliminarTitulo = Label(ventana, text="Eliminar Persona",bg='#FCF8E8',font=("Imprint MT Shadow", 20))
+cedulaEliTitulo = Label(ventana, text="Ingrese la cédula",bg='#FCF8E8')
+cedulaEliEntrada = Entry(ventana, textvariable=cedulaEli)
+motivoTitulo = Label(ventana, text="Ingrese el motivo",bg='#FCF8E8')
+motivoEntrada = Entry(ventana,textvariable=motivo)
+ingresarMotivo = Button(ventana,text="Ingresar",bg="#94B49F",command=ventanaEliminarAux)#AUIII
+limpiarMotivo = Button(ventana,text="Limpiar",bg="#FCF8E8",command=clean)
+regresarMotivo = Button(ventana,text="Regresar",bg='#DF7861',command=ventanaPrincipal)
+ingresarMotivoAux = Button(ventana,text="Ingresar",bg="#94B49F",command=mostrarEliminar)
 #PP
+#Confirmar en eliminar y modificar
 
 ventanaPrincipal()
 ventana.mainloop()
