@@ -8,7 +8,6 @@
 #Validaciones
 import re
 from funciones import *
-#from interfaz import cedulas
 
 def validarCedula(cedula):
     if re.match('^\d{1}\-{1}\d{4}\-{1}\d{4}$',cedula):

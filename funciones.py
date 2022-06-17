@@ -15,6 +15,7 @@ baseDeDatos=[] #Será la base de datos principal, una lista de objetos
 paises=[] #Base de Datos de los paises
 personalidades={}
 tip=[]
+ced=[]
 
 #Funciones para Cargar Bases de Datos
 def esPar(pnum):
@@ -81,11 +82,21 @@ def generarTipos(personali):
     """
     Funcionamiento: Saca los tipos de personalidad y los mete a una lista
     Entrada: N/D
-    Salida: 
+    Salida: tip(list)
     """
     tip=[]
     for i in personali.keys():
         tip.append(i)
     return tip
 
-
+def generarCedulas(base):
+    """
+    Funcionamiento: Saca als cédulas y los mete a una lista
+    Entrada: N/D
+    Salida: ced(list)
+    """
+    ced=[]
+    for i in base:
+        aux = i.getCedula()
+        ced.append(aux)
+    return ced
