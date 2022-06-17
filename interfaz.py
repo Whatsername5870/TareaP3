@@ -505,11 +505,11 @@ def generarHtmlTipo():
     #Crea las celdas con la información
     for m in BDactiva:
         if esPar(cont):
-            tabla+="<tr colspan='2' style='background-color: rgb(102, 255, 153);'>"
+            tabla+="<tr style='background-color: rgb(102, 255, 153);'>"
         else:
-            tabla+="<tr colspan='2' style='background-color: rgb(255, 127, 0);'>"
+            tabla+="<tr style='background-color: rgb(255, 127, 0);'>"
         for dato in range(5):
-            contenidotabla1="<td>"
+            contenidotabla1="<td  colspan='2' >"
             if dato==0:
                 tabla+= contenidotabla1+str(m.getCedula()) 
             elif dato==1:
