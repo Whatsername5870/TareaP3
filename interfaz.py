@@ -209,14 +209,18 @@ def insertarParti():
     if validarCedula(cedulaA):
         if validarNombre(nombreA):
             persona=Persona(cedulaA,nombreA,generoA,paisA,persoA) #Hacer función alambrada con las personalidades
-            baseDeDatos.append(persona)
+            baseDeDatos.append(persona) 
+            '''
             print(persona.getCedula())
             print(persona.getNombre())
             print(persona.getGenero())
             print(persona.getPais())
+            '''
             print(persona.getPersonalidad())
-            print(persona.getEstado())
-            mb.showinfo("PPersona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
+            
+            print(persona.getEstado()) 
+            
+            mb.showinfo("Persona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
         else:
             mb.showinfo("Nombre Incorrecto", "El formato del nombre debe empezar con el nombre, un espacio, el primer apelido seguido del segundo con un guión\nEjemplo: Ana Li-Fuentes")    
     else:
@@ -343,12 +347,10 @@ def crearXML():
     Entrada: N/D
     Salida: mensaje(showinfo)
     """
-    print(personalidades)
     subtipo=codigo=''
     contA=1
     aux=[]
     try:
-        
         personalidad = ET.Element("personalidades")
         for i in personalidades:
             tipo = ET.SubElement(personalidad,i)
@@ -361,9 +363,6 @@ def crearXML():
             contA+=1
         arbol = ET.ElementTree(personalidad)
         arbol.write("PersonalidadesXML.xml")
-        
-        
-
         mb.showinfo("Información", "Los datos de las Personalidades han sido guardadas en 'PersonalidadesXML.xml' ")
     except:
         mb.showinfo("ERROR", "No se pudo crear el archivo XML de las Personalidades")
@@ -406,21 +405,146 @@ def ventanaReportes():
     limpiarBotonN.grid_remove()
     regresarReportes.grid_remove()
 
+def generarHtmlPersonalidades():
+    """
+    Funcionamiento: Crea el archivo HTML para ReportePersonalidades   
+    Entrada: N/D   
+    Salida: N/D
+    """
+    tabla=""
+    nombreArchivo = "personalidades-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+    tipAux = generarTipos(personalidades)
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte Personalidades"
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody><tr style='background-color: rgb(255, 127, 0);'>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in tipAux:
+        encabezadosTabla1="<td colspan='2'>"
+        tabla+= encabezadosTabla1+str(n)
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr><tr>"
+
+    #Crea las celdas con la información
+    for m in personalidades:
+        contenidotabla1="<td colspan='2' style='background-color: rgb(102, 255, 153);'>"
+        tabla+= contenidotabla1+str(personalidades[m])
+        contenidotabla2="</td>"
+        tabla+=contenidotabla2
+
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
+
 def reportePersonalidades():
     """
     Funcionamiento: Crea un archivo HTML donde imprime un reporte del diccionario personalidades
     Entrada: N/D
     Salida: showinfo (mensaje)
     """
-    generarHtmlPersonalidades()
-    return mb.showinfo("Información", "Archivo 'PersonalidadesHTML' de tipo html ha sido creado")
+    try:
+        generarHtmlPersonalidades()
+        return mb.showinfo("Información", "Archivo 'PersonalidadesHTML' de tipo html ha sido creado")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
-def genererReporteTipo():
+def generarHtmlTipo():
+    """
+    Funcionamiento: Crea el archivo HTML para ReporteTipos
+    Entrada: N/D
+    Salida:
+    """
+    tabla=""
+    BDactiva=[]
+    nombreArchivo = "tipos-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+    tipoSeleccionado = tipoCombobox.get()
+
+    for a in baseDeDatos:
+        estatus = a.getEstado()
+        subtype = a.getPersonalidad()
+        for n in personalidades:
+            aux=0
+            if n == tipoSeleccionado:
+                valor = personalidades[n]
+                for j in valor:
+                    if j[0]==subtype and estatus[0]==True:
+                        BDactiva.append(a)
+                    aux+=1
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte Tipo "+tipoSeleccionado
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody><tr style='background-color: rgb(255, 127, 0);'>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in range(5):
+        encabezadosTabla1="<td colspan='2'>"
+        if n==0:
+            tabla+= encabezadosTabla1+"Cedula"
+        elif n==1:
+            tabla+= encabezadosTabla1+"Nombre"
+        elif n==2:
+            tabla+= encabezadosTabla1+"Genero"
+        elif n==3:
+            tabla+= encabezadosTabla1+"Subtipo"
+        else:
+            tabla+= encabezadosTabla1+"Pais"
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr>"
+    cont=0
+    #Crea las celdas con la información
+    for m in BDactiva:
+        if esPar(cont):
+            tabla+="<tr colspan='2' style='background-color: rgb(102, 255, 153);'>"
+        else:
+            tabla+="<tr colspan='2' style='background-color: rgb(255, 127, 0);'>"
+        for dato in range(5):
+            contenidotabla1="<td>"
+            if dato==0:
+                tabla+= contenidotabla1+str(m.getCedula()) 
+            elif dato==1:
+                tabla+= contenidotabla1+str(m.getNombre()) 
+            elif dato==2:
+                tabla+= contenidotabla1+str(m.getGenero()) 
+            elif dato==3:
+                tabla+= contenidotabla1+str(m.getPersonalidad()) 
+            else:
+                tabla+= contenidotabla1+str(m.getPais()) 
+            tabla+="</td>"
+        cont+=1
+        tabla+="</tr>"
+
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
+
+def generarReporteTipo():
     """
     Funcionamiento: Crea un archivo HTML con los datos especificados
     Entrada: N/D
     Salida: 
     """
+    try:
+        if tipoCombobox.get() == "":
+            return mb.showinfo("Error", "Debe elegir una opción antes de crear el archivo HTML")
+        generarHtmlTipo()
+        return mb.showinfo("Información", "Archivo 'PersonalidadesHTML' de tipo html ha sido creado")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
 def reporteTipoPersonalidad():
     """
@@ -557,7 +681,7 @@ selecccionarTipo = Label(ventana, text="Seleccione un tipo: ")
 tipo = StringVar()
 op = generarTipos(personalidades)
 tipoCombobox = Combobox(ventana, state='readonly',values=[op[0],op[1],op[2],op[3]],textvariable=tipo)
-generarBotonTipos = Button(ventana, text="Generar", command=genererReporteTipo)
+generarBotonTipos = Button(ventana, text="Generar", command=generarReporteTipo)
 limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
 regresarReportes = Button(ventana, text="Regresar", command=ventanaReportes, width=12, height=2)
 
