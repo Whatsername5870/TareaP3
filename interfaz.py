@@ -22,6 +22,7 @@ paises=[] #Base de Datos de los paises
 personalidades={}
 retirados=[]
 cedulas=[]
+retirados=[]
 
 #Ventana Principal
 ventana = Tk()
@@ -210,16 +211,12 @@ def insertarParti():
         if validarNombre(nombreA):
             persona=Persona(cedulaA,nombreA,generoA,paisA,persoA) #Hacer función alambrada con las personalidades
             baseDeDatos.append(persona) 
-            '''
             print(persona.getCedula())
             print(persona.getNombre())
             print(persona.getGenero())
             print(persona.getPais())
-            '''
             print(persona.getPersonalidad())
-            
             print(persona.getEstado()) 
-            
             mb.showinfo("Persona Incertada", "Se realizó el ingreso del participante satisfactoriamente.")
         else:
             mb.showinfo("Nombre Incorrecto", "El formato del nombre debe empezar con el nombre, un espacio, el primer apelido seguido del segundo con un guión\nEjemplo: Ana Li-Fuentes")    
@@ -404,6 +401,10 @@ def ventanaReportes():
     generarBotonTipos.grid_remove()
     limpiarBotonN.grid_remove()
     regresarReportes.grid_remove()
+    #Botones ReportePersona
+    tituloReportePersona.grid_remove()
+    introducirCedula.grid_remove()
+    generarBotonPersona.grid_remove()
 
 def generarHtmlPersonalidades():
     """
@@ -460,7 +461,7 @@ def generarHtmlTipo():
     """
     Funcionamiento: Crea el archivo HTML para ReporteTipos
     Entrada: N/D
-    Salida:
+    Salida:N/D
     """
     tabla=""
     BDactiva=[]
@@ -536,7 +537,7 @@ def generarReporteTipo():
     """
     Funcionamiento: Crea un archivo HTML con los datos especificados
     Entrada: N/D
-    Salida: 
+    Salida: showinfo(mensaje)
     """
     try:
         if tipoCombobox.get() == "":
@@ -550,7 +551,7 @@ def reporteTipoPersonalidad():
     """
     Funcionamiento: Crea una ventana para elegir un tipo de personalidad y crear un archivo HTML
     Entrada: N/D
-    Salida: 
+    Salida: N/D
     """
     ventana.geometry("400x120")
     tituloReporteTipos.grid(row=0, column=0, sticky=W, columnspan=2)
@@ -562,7 +563,7 @@ def reporteTipoPersonalidad():
     limpiarBotonN.grid(row=2, column=1, pady=15)
     regresarReportes.grid(row=2, column=2, sticky=E, pady=15)
     
-    #Ocultar botones de ventana principal
+    #Ocultar botones 
     tituloReportes.grid_remove()
     reportePersonalidad.grid_remove()
     reporteTipo.grid_remove()
@@ -572,42 +573,210 @@ def reporteTipoPersonalidad():
     reportePorPaisBoton.grid_remove()
     botonRegresarPequeño.grid_remove()
 
-    titulo.grid_remove()
-    cargarBD.grid_remove()
-    insertarPart.grid_remove()
-    insertarNPart.grid_remove()
-    modificar.grid_remove()
-    eliminar.grid_remove()
-    xml.grid_remove()
-    reportes.grid_remove()
-    salir.grid_remove()
+def generarHtmlPersona():
+    """
+    Funcionamiento: Crea el archivo HTML para ReportePersonas
+    Entrada: N/D
+    Salida: N/D
+    """
+    tabla=""
+    nombreArchivo = "persona-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+    personaBuscar = cedula.get()
+
+    for a in baseDeDatos:
+        ced = a.getCedula()
+        if ced==personaBuscar:
+            personaA = a
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte de Persona"
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody><tr style='background-color: rgb(255, 127, 0);'>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in range(5):
+        encabezadosTabla1="<td colspan='2'>"
+        if n==0:
+            tabla+= encabezadosTabla1+"Cedula"
+        elif n==1:
+            tabla+= encabezadosTabla1+"Nombre"
+        elif n==2:
+            tabla+= encabezadosTabla1+"Genero"
+        elif n==3:
+            tabla+= encabezadosTabla1+"Subtipo"
+        else:
+            tabla+= encabezadosTabla1+"Pais"
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr>"
+    #Crea las celdas con la información
+    tabla+="<tr style='background-color: rgb(102, 255, 153);'>"
+    contenidotabla1="<td  colspan='2' >"
+    for m in range(5):
+        if m==0:
+            tabla+= contenidotabla1+str(personaA.getCedula()) 
+        elif m==1:
+            tabla+= contenidotabla1+str(personaA.getNombre()) 
+        elif m==2:
+            tabla+= contenidotabla1+str(personaA.getGenero()) 
+        elif m==3:
+            tabla+= contenidotabla1+str(personaA.getPersonalidad()) 
+        else:
+            tabla+= contenidotabla1+str(personaA.getPais()) 
+        tabla+="</td>"
+    tabla+="</tr>"
+
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
+
+def generarReportePersonas():
+    """
+    Funcionamiento: Crea un archivo HTML con los datos especificados
+    Entrada: N/D
+    Salida: showinfo(mensaje)
+    """
+    cedulas = generarCedulas(baseDeDatos)
+    try:
+        if cedula.get() == "":
+            return mb.showinfo("Error", "Debe digitar una cédula antes de crear el archivo HTML")
+        elif validarCedula(cedula.get())==False:
+            return mb.showinfo("Error", "Debe digitar un formato de cédula válido antes de crear el archivo HTML")
+        for u in cedulas:
+            if u==cedula.get():
+                generarHtmlPersona()
+                return mb.showinfo("Información", "Archivo 'PersonaHTML' de tipo html ha sido creado")
+        return mb.showinfo("Error", "La cédula que digitó no se encuentra registrada")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
 def reporteInfoPersona():
     """
     Funcionamiento: Crea una ventana donde se solicita la cédula, y si existe crea un archivo HTML con su información
     Entrada: N/D
-    Salida: 
+    Salida: N/D
     """
+    ventana.geometry("400x120")
+    tituloReportePersona.grid(row=0, column=0, sticky=W, columnspan=2)
+    introducirCedula.grid(row=1, column=0)
+    cedulaEntrada.grid(row=1, column=1)
+    generarBotonPersona.config(width=12, height=2)
+    generarBotonPersona.grid(row=2, column=0, sticky=E, pady=15)
+    limpiarBotonN.config(width=12, height=2)
+    limpiarBotonN.grid(row=2, column=1, pady=15)
+    regresarReportes.grid(row=2, column=2, sticky=E, pady=15)
+
+    #Ocultar botones 
+    tituloReportes.grid_remove()
+    reportePersonalidad.grid_remove()
+    reporteTipo.grid_remove()
+    reportePersona.grid_remove()
+    reporteBDBoton.grid_remove()
+    reporteRetiradosBoton.grid_remove()
+    reportePorPaisBoton.grid_remove()
+    botonRegresarPequeño.grid_remove()
+
+def generarHtmlBD():
+    """
+    Funcionamiento: Crea el archivo HTML para ReporteBD
+    Entrada: N/D
+    Salida: N/D
+    """
+    tabla=""
+    nombreArchivo = "basedatos-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte de la Base de Datos"
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody><tr style='background-color: rgb(0, 152, 153);'>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in range(5):
+        encabezadosTabla1="<td colspan='2'>"
+        if n==0:
+            tabla+= encabezadosTabla1+"Cedula"
+        elif n==1:
+            tabla+= encabezadosTabla1+"Nombre"
+        elif n==2:
+            tabla+= encabezadosTabla1+"Genero"
+        elif n==3:
+            tabla+= encabezadosTabla1+"Subtipo"
+        else:
+            tabla+= encabezadosTabla1+"Pais"
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr>"
+
+    #Crea las celdas con la información
+    cont=0
+    for m in baseDeDatos:
+        if esPar(cont):
+            tabla+="<tr style='background-color: rgb(102, 255, 153);'>"
+        else:
+            tabla+="<tr style='background-color: rgb(255, 127, 0);'>"
+        for dato in range(5):
+            contenidotabla1="<td  colspan='2' >"
+            if dato==0:
+                tabla+= contenidotabla1+str(m.getCedula()) 
+            elif dato==1:
+                tabla+= contenidotabla1+str(m.getNombre()) 
+            elif dato==2:
+                tabla+= contenidotabla1+str(m.getGenero()) 
+            elif dato==3:
+                tabla+= contenidotabla1+str(m.getPersonalidad()) 
+            else:
+                tabla+= contenidotabla1+str(m.getPais()) 
+            tabla+="</td>"
+        cont+=1
+        tabla+="</tr>"
+
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
 
 def reporteBD():
     """
     Funcionamiento: Crea un archivo HTML donde imprime la informacion de cada persona alternando 2 colores por fila
     Entrada: N/D
-    Salida: 
+    Salida: showinfo(mensaje)
     """
+    try:
+        if baseDeDatos==[]:
+            return mb.showinfo("Error", "La Base de Datos debe tener información antes de crear el archivo HTML")
+        generarHtmlBD()
+        return mb.showinfo("Información", "Archivo 'BaseDatosHTML' de tipo html ha sido creado")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
 def reporteRetirados():
     """
     Funcionamiento: Crea un archivo HTML donde imprime los reportes de las personas retiradas
     Entrada: N/D
-    Salida: 
+    Salida: showinfo(mensaje)
     """
+    try:
+        if retirados==[]:
+            return mb.showinfo("Error", "La Base de Datos debe tener miembros retirados antes de crear el archivo HTML")
+        generarHtmlBD()
+        return mb.showinfo("Información", "Archivo 'RetiradosHTML' de tipo html ha sido creado")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
 def reportePorPais():
     """
     Funcionamiento: Crea un archivo HTML donde imprime los reportes de las personas dividido por paises, activos o no, mostrando su estado
     Entrada: N/D
-    Salida: 
+    Salida: showinfo(mensaje)
     """
 
 
@@ -684,8 +853,12 @@ tipoCombobox = Combobox(ventana, state='readonly',values=[op[0],op[1],op[2],op[3
 generarBotonTipos = Button(ventana, text="Generar", command=generarReporteTipo)
 limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
 regresarReportes = Button(ventana, text="Regresar", command=ventanaReportes, width=12, height=2)
-
-
+#ReportePersona
+tituloReportePersona = Label(ventana, text="Reporte de Persona", font=("Times", 20))
+introducirCedula = Label(ventana, text="Introduzca una cédula: ")
+generarBotonPersona = Button(ventana, text="Generar", command=generarReportePersonas)
+limpiarBotonN = Button(ventana, text="Limpiar", command=clean)
+regresarReportes = Button(ventana, text="Regresar", command=ventanaReportes, width=12, height=2)
 
 
 #Función para Limpiar
