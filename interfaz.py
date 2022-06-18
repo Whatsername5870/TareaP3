@@ -758,6 +758,66 @@ def reporteBD():
     except:
         return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
+def generarHtmlRetirados():
+    """
+    Funcionamiento: Crea el archivo HTML para ReporteRetirados
+    Entrada: N/D
+    Salida: N/D
+    """
+    tabla=""
+    nombreArchivo = "retirados-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte de Empleados Retirados"
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody><tr style='background-color: rgb(0, 152, 153);'>"
+
+    #Crea los encabezados agarrando las llaves del diccionario
+    for n in range(4):
+        encabezadosTabla1="<td colspan='2'>"
+        if n==0:
+            tabla+= encabezadosTabla1+"Cedula"
+        elif n==1:
+            tabla+= encabezadosTabla1+"Nombre"
+        elif n==2:
+            tabla+= encabezadosTabla1+"Fecha"
+        else:
+            tabla+= encabezadosTabla1+"Justificacion"
+        encabezadosTabla2="</td>"
+        tabla+= encabezadosTabla2
+    tabla+="</tr>"
+
+    #Crea las celdas con la información
+    cont=0
+    for m in retirados:
+        if esPar(cont):
+            tabla+="<tr style='background-color: rgb(102, 255, 153);'>"
+        else:
+            tabla+="<tr style='background-color: rgb(255, 127, 0);'>"
+        for dato in range(4):
+            contenidotabla1="<td  colspan='2' >"
+            estadoRetirados = m.getEstado()
+            if dato==0:
+                tabla+= contenidotabla1+str(m.getCedula()) 
+            elif dato==1:
+                tabla+= contenidotabla1+str(m.getNombre()) 
+            elif dato==2:
+                tabla+= contenidotabla1+str(estadoRetirados[2]) 
+            else:
+                tabla+= contenidotabla1+str(estadoRetirados[1]) 
+            tabla+="</td>"
+        cont+=1
+        tabla+="</tr>"
+
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
+
 def reporteRetirados():
     """
     Funcionamiento: Crea un archivo HTML donde imprime los reportes de las personas retiradas
@@ -767,10 +827,79 @@ def reporteRetirados():
     try:
         if retirados==[]:
             return mb.showinfo("Error", "La Base de Datos debe tener miembros retirados antes de crear el archivo HTML")
-        generarHtmlBD()
+        generarHtmlRetirados()
         return mb.showinfo("Información", "Archivo 'RetiradosHTML' de tipo html ha sido creado")
     except:
         return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
+
+def generarHtmlPorPais():
+    """
+    Funcionamiento: Crea el archivo HTML para ReportePorPais
+    Entrada: N/D
+    Salida: N/D
+    """
+    tabla=""
+    nombreArchivo = "porpais-"+fechaYHoraActual()+".html"
+    f = open(nombreArchivo,'w')
+
+    mensajeInicio = "<html><head></head><body><h1>"      
+    titulo = "Reporte de la BD por Pais"
+    mensajeMedio="</h1>"
+    tabla+= "<table width='100%' border='1'><tbody>"
+    #Recorre cada pais
+    for p in paises:
+        for k in baseDeDatos:
+            cont=0
+            auxPais = k.getPais()
+            if p==auxPais:
+                tabla+="<tr> <th colspan='12' style='background-color: rgb(240, 230, 140);'>"+p+"</th> </tr>"
+                #Crea los encabezados agarrando las llaves del diccionario
+                tabla+="<tr>"
+                for n in range(6):
+                    encabezadosTabla1="<th colspan='2' style='background-color: rgb(153, 102, 204);'>"
+                    if n==0:
+                        tabla+= encabezadosTabla1+"Cedula"
+                    elif n==1:
+                        tabla+= encabezadosTabla1+"Nombre"
+                    elif n==2:
+                        tabla+= encabezadosTabla1+"Genero"
+                    elif n==3:
+                        tabla+= encabezadosTabla1+"Subtipo"
+                    elif n==4:
+                        tabla+= encabezadosTabla1+"Estado"
+                    else:
+                        tabla+= encabezadosTabla1+"Pais"
+                    encabezadosTabla2="</th>"
+                    tabla+= encabezadosTabla2
+                tabla+="</tr><tr>"
+                #Crea las celdas con la información
+                estatus = k.getEstado()
+                for dato in range(6):
+                    if esPar(cont):
+                        contenidotabla1="<td  colspan='2' style='background-color: rgb(102, 255, 153);'>"
+                    else:
+                        contenidotabla1="<td  colspan='2' style='background-color: rgb(255, 127, 0);'>"
+                    if dato==0:
+                        tabla+= contenidotabla1+str(k.getCedula()) 
+                    elif dato==1:
+                        tabla+= contenidotabla1+str(k.getNombre()) 
+                    elif dato==2:
+                        tabla+= contenidotabla1+str(k.getGenero()) 
+                    elif dato==3:
+                        tabla+= contenidotabla1+str(k.getPersonalidad()) 
+                    elif dato==4:
+                        tabla+= contenidotabla1+str(estatus[0]) 
+                    else:
+                        tabla+= contenidotabla1+str(k.getPais()) 
+                    tabla+="</td>"
+                cont+=1
+    tabla+="</tr></table></tbody>"
+    mensajeFinal = "</body></html>"
+
+    mensajeCompleto = mensajeInicio + titulo + mensajeMedio + tabla + mensajeFinal
+    f.write(mensajeCompleto)
+    f.close()
+    return ''
 
 def reportePorPais():
     """
@@ -778,6 +907,13 @@ def reportePorPais():
     Entrada: N/D
     Salida: showinfo(mensaje)
     """
+    try:
+        if baseDeDatos==[]:
+            return mb.showinfo("Error", "La Base de Datos debe tener miembros antes de crear el archivo HTML")
+        generarHtmlPorPais()
+        return mb.showinfo("Información", "Archivo 'PorPaisHTML' de tipo html ha sido creado")
+    except:
+        return mb.showinfo("Error", "El archivo HTML NO ha podido ser creado")
 
 
 #Botones Ventana Principal
